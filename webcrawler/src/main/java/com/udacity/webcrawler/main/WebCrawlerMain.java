@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -38,6 +39,26 @@ public final class WebCrawlerMain {
     CrawlResultWriter resultWriter = new CrawlResultWriter(result);
     // TODO: Write the crawl results to a JSON file (or System.out if the file name is empty)
     // TODO: Write the profile data to a text file (or System.out if the file name is empty)
+    try(Writer writer = new OutputStreamWriter(System.out)){ // as mentioned in the hint of the Legacy crawler page of the project in udacity
+      //implemented try-with-resources, so, no need to close the buffered writer explicitly
+      String rresultPath = config.getResultPath();
+      if(!rresultPath.isEmpty()){
+        resultWriter.write(Path.of(rresultPath));
+      } else {
+        resultWriter.write(writer);
+      }
+      if(!config.getProfileOutputPath().isEmpty()){
+        Path path = Path.of(config.getProfileOutputPath());
+        try(BufferedWriter bufferedWriter = Files.newBufferedWriter(path)){
+          //implemented try-with-resources, so, no need to close the buffered writer explicitly
+          profiler.writeData(bufferedWriter);
+        } catch(Exception ex){
+          ex.printStackTrace();
+        }
+      } else {
+        profiler.writeData(writer);
+      }
+    }
   }
 
   public static void main(String[] args) throws Exception {
