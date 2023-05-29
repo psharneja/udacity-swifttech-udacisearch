@@ -37,14 +37,7 @@ final class ProfilerImpl implements Profiler {
     //       ProfilingMethodInterceptor and return a dynamic proxy from this method.
     //       See https://docs.oracle.com/javase/10/docs/api/java/lang/reflect/Proxy.html.
 
-    boolean annotatedMethods = false;
-    for(Method method : klass.getMethods()){
-      if(method.getAnnotation(Profiled.class) != null) {
-        annotatedMethods = true;
-        break;
-      }
-    }
-    if(!annotatedMethods){
+    if(!isProfiled(klass)){
       throw new IllegalArgumentException(klass.getName() +" doesnt have @Profiled methods");
     }
 
@@ -55,6 +48,20 @@ final class ProfilerImpl implements Profiler {
     T proxy = (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[]{klass}, profilingMethodInterceptor);
 
     return proxy;
+  }
+
+  @Profiled
+  public boolean isProfiled(Class <?> klass) throws IllegalArgumentException{
+    // For easy understanding, checking if the methods are profiled for not, separately, in a separate method.
+    boolean isProfiled = false;
+    Method[] methods = klass.getMethods();
+    for (Method method : methods) {
+      if (method.getAnnotation(Profiled.class) != null) {
+        isProfiled = true;
+        break;
+      }
+    }
+    return isProfiled;
   }
 
   @Override
