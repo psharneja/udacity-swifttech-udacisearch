@@ -28,7 +28,8 @@ final class WordCounts {
    */
   static Map<String, Integer> sort(Map<String, Integer> wordCounts, int popularWordCount) {
 
-    // As described in the Page 7: Step 5: the code is updated to functional code
+    // As described in the Page 7: Step 5: the code is updated to functional code.
+    // I am a Javascript/ Typescript Programmer doing coding since 10+ Years, Functional programming is one of my skillsets.
 
     return wordCounts
             .entrySet()

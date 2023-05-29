@@ -94,7 +94,7 @@ final class ParallelWebCrawler implements WebCrawler {
     @Override
     protected Boolean compute() {
       // This extends RecursiveTask to immitate the recursive nature of `crawlInternal` method in SequentialWebCrawler.
-      // As was advised in the Project Guidelines Step - 6: Parallel Crawler to implement either RecursiveAction or RecursiveTask subclass.
+      // As was advised in the Project Guidelines Page - 6: Parallel Crawler to implement either RecursiveAction or RecursiveTask subclass.
       // For RecursiveTask I have to override the compute method,
       // The logic for this compute method is influenced from SequentialWebCrawler.java, method: crawlInternal.
       if(maxDepth == 0 || clock.instant().isAfter(deadline)){
