@@ -1,7 +1,15 @@
 package com.udacity.webcrawler.json;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
 /**
@@ -29,6 +37,12 @@ public final class CrawlResultWriter {
     // This is here to get rid of the unused variable warning.
     Objects.requireNonNull(path);
     // TODO: Fill in this method.
+    try(BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.CREATE)){
+      //implemented try-with-resources, so, no need to close the buffered writer explicitly
+      write(bufferedWriter);
+    }catch(IOException ex){
+      throw new RuntimeException(ex);
+    }
   }
 
   /**
@@ -40,5 +54,16 @@ public final class CrawlResultWriter {
     // This is here to get rid of the unused variable warning.
     Objects.requireNonNull(writer);
     // TODO: Fill in this method.
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+    /* Implemented above line because getting error "Streams should usually be closed in the same scope where they were created"
+    while running tests. Also, it is mentioned as a Hint in the Crawler Output page of the project in udacity dashboard/ course
+     */
+    try{
+      objectMapper.writeValue(writer, result);
+  } catch(Exception ex){
+    throw new RuntimeException(ex);
+    }
   }
 }
