@@ -33,6 +33,8 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
     //       invoke the method using the object that is being profiled. Finally, for profiled
     //       methods, the interceptor should record how long the method call took, using the
     //       ProfilingState methods.
+
+    //kept this at the top otherwise checking the condition in the if statement causes warning.
     boolean isProfiled = method.getAnnotation(Profiled.class) != null;
 
     Instant startTime = null;
