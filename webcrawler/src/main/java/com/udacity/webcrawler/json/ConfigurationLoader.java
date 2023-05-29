@@ -1,6 +1,10 @@
 package com.udacity.webcrawler.json;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.Reader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -25,8 +29,12 @@ public final class ConfigurationLoader {
    */
   public CrawlerConfiguration load() {
     // TODO: Fill in this method.
-
-    return new CrawlerConfiguration.Builder().build();
+    try(Reader reader = Files.newBufferedReader(path)){
+      //implemented try-with-resources, so, no need to close the buffered reader explicitly
+      return read(reader);
+    } catch(Exception ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   /**
@@ -40,7 +48,16 @@ public final class ConfigurationLoader {
     Objects.requireNonNull(reader);
 
     // TODO: Fill in this method
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+    /* Implemented above line because getting error "Streams should usually be closed in the same scope where they were created"
+    while running tests. Also, it is mentioned as a Hint in the Crawler Configuration page of the project in udacity dashboard/ course
+     */
+    try{
+      return objectMapper.readValue(reader, CrawlerConfiguration.Builder.class).build();
+    } catch(Exception ex){
+      throw new RuntimeException(ex);
 
-    return new CrawlerConfiguration.Builder().build();
+    }
   }
 }
