@@ -104,8 +104,11 @@ final class ParallelWebCrawler implements WebCrawler {
       for(Pattern pattern: ignoredUrls){
         if(pattern.matcher(url).matches()){ return false;}
       }
-      if(visitedUrls.contains(url)){return false;}
-      visitedUrls.add(url);
+//      if(visitedUrls.contains(url)){return false;}
+//      visitedUrls.add(url);
+//       updated the code to incorporate review comments. As per previous implementation (above)
+//       the parallel threads could sometime revisit the same URL. Hence, Updated, to below.
+      if(!visitedUrls.add(url)){return false;}
       PageParser.Result result = pageParserFactory.get(url).parse();
       for(ConcurrentMap.Entry<String, Integer> e: result.getWordCounts().entrySet()){
         counts.compute(e.getKey(), (k, v) -> (v==null) ? e.getValue(): e.getValue() + v);
