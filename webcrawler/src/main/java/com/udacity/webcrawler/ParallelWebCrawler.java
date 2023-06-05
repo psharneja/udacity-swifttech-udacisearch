@@ -74,6 +74,7 @@ final class ParallelWebCrawler implements WebCrawler {
 
   @Override
   public int getMaxParallelism() {
+    // this mathod is part of the base codebase provided by udacity and I didnot touch it.
     return Runtime.getRuntime().availableProcessors();
   }
 
